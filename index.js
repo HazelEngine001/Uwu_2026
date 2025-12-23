@@ -1,3 +1,18 @@
+/* ================= WEB SERVER (BẮT BUỘC CHO RENDER) ================= */
+const express = require("express");
+const app = express();
+
+const PORT = process.env.PORT || 3000;
+
+app.get("/", (req, res) => {
+  res.send("Bot is running!");
+});
+
+app.listen(PORT, () => {
+  console.log("Web server running on port " + PORT);
+});
+
+/* ================= BOT CODE ================= */
 require("dotenv").config();
 const {
   Client,
@@ -15,12 +30,12 @@ const client = new Client({
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
-    GatewayIntentBits.GuildMessageReactions // ⭐ BẮT BUỘC
+    GatewayIntentBits.GuildMessageReactions
   ],
   partials: [
     Partials.Message,
     Partials.Channel,
-    Partials.Reaction // ⭐ BẮT BUỘC
+    Partials.Reaction
   ]
 });
 
@@ -54,7 +69,6 @@ client.once("clientReady", () => {
   console.log("Bot ready");
 });
 
-
 /* ================= MESSAGE HANDLER ================= */
 client.on("messageCreate", async (message) => {
   if (message.author.bot) return;
@@ -66,7 +80,6 @@ client.on("messageCreate", async (message) => {
   let args = content.split(/\s+/);
   let cmdName = args.shift().toLowerCase();
 
-  /* ===== TÌM COMMAND / ALIAS ===== */
   let command =
     client.commands.get(cmdName) ||
     [...client.commands.values()].find(c =>
